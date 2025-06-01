@@ -227,8 +227,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _resposiveWidgetTest() {
-    return Center(
-        child: const ResponsiveWidget(xs: Text('xs'), sm: Text('sm'), md: Text('md'), lg: Text('lg'), xl: Text('xl')));
+    return const Center(
+        child: ResponsiveWidget(xs: Text('xs'), sm: Text('sm'), md: Text('md'), lg: Text('lg'), xl: Text('xl')));
   }
 
   Widget _resposiveValueTest() {

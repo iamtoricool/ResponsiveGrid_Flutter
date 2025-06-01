@@ -1,4 +1,4 @@
-library responsive_grid;
+library;
 
 import 'package:flutter/widgets.dart';
 
@@ -54,8 +54,8 @@ class ResponsiveGridRow extends StatelessWidget {
     required this.children,
     this.crossAxisAlignment = CrossAxisAlignment.start,
     this.rowSegments = 12,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +65,7 @@ class ResponsiveGridRow extends StatelessWidget {
     var cols = <Widget>[];
 
     for (var col in children) {
-      var colWidth = col.currentConfig(context) ?? 1;
+      var colWidth = col.currentConfig(context);
       //
       if (accumulatedWidth + colWidth > rowSegments) {
         if (accumulatedWidth < rowSegments) {
@@ -74,7 +74,7 @@ class ResponsiveGridRow extends StatelessWidget {
           ));
         }
         rows.add(Row(
-          crossAxisAlignment: this.crossAxisAlignment,
+          crossAxisAlignment: crossAxisAlignment,
           children: cols,
         ));
         // clear
@@ -105,7 +105,7 @@ class ResponsiveGridRow extends StatelessWidget {
 }
 
 class ResponsiveGridCol extends StatelessWidget {
-  final _config = [0,0,0,0,0];
+  final _config = [0, 0, 0, 0, 0];
   final Widget child;
 
   ResponsiveGridCol({
@@ -115,8 +115,8 @@ class ResponsiveGridCol extends StatelessWidget {
     int? lg,
     int? xl,
     required this.child,
-    Key? key,
-  }) : super(key: key) {
+    super.key,
+  }) {
     _config[_GridTier.xs.index] = xs;
     _config[_GridTier.sm.index] = sm ?? _config[_GridTier.xs.index];
     _config[_GridTier.md.index] = md ?? _config[_GridTier.sm.index];
@@ -163,8 +163,8 @@ class ResponsiveGridList extends StatelessWidget {
     this.shrinkWrap = false,
     this.controller,
     this.physics,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -190,9 +190,11 @@ class ResponsiveGridList extends StatelessWidget {
             n = 1;
           }
 
-          double dw = width - (n * (desiredItemWidth + minSpacing) + minSpacing);
+          double dw =
+              width - (n * (desiredItemWidth + minSpacing) + minSpacing);
 
-          itemWidth = desiredItemWidth + (dw / n) * (desiredItemWidth / (desiredItemWidth + minSpacing));
+          itemWidth = desiredItemWidth +
+              (dw / n) * (desiredItemWidth / (desiredItemWidth + minSpacing));
 
           spacing = (width - itemWidth * n) / (n + 1);
         }
@@ -274,8 +276,7 @@ class _ResponsiveGridListRow extends StatelessWidget {
     required this.squareCells,
     required this.children,
     this.mainAxisAlignment = MainAxisAlignment.start,
-    Key? key,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -328,8 +329,8 @@ class ResponsiveStaggeredGridList extends StatelessWidget {
     this.controller,
     this.physics,
     this.scroll = true,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -355,9 +356,11 @@ class ResponsiveStaggeredGridList extends StatelessWidget {
             n = 1;
           }
 
-          double dw = width - (n * (desiredItemWidth + minSpacing) + minSpacing);
+          double dw =
+              width - (n * (desiredItemWidth + minSpacing) + minSpacing);
 
-          itemWidth = desiredItemWidth + (dw / n) * (desiredItemWidth / (desiredItemWidth + minSpacing));
+          itemWidth = desiredItemWidth +
+              (dw / n) * (desiredItemWidth / (desiredItemWidth + minSpacing));
 
           spacing = (width - itemWidth * n) / (n + 1);
         }
@@ -424,7 +427,8 @@ class ResponsiveWidget extends StatelessWidget {
   final Widget? sm, md, lg, xl;
   final Widget xs;
 
-  const ResponsiveWidget({Key? key, this.lg, this.md, this.sm, this.xl, required this.xs}) : super(key: key);
+  const ResponsiveWidget(
+      {super.key, this.lg, this.md, this.sm, this.xl, required this.xs});
 
   @override
   Widget build(BuildContext context) {
@@ -452,14 +456,14 @@ class ResponsiveBuilder extends StatelessWidget {
   final Function(BuildContext context, Widget child) xs;
 
   const ResponsiveBuilder({
-    Key? key,
+    super.key,
     required this.child,
     required this.xs,
     this.sm,
     this.md,
     this.lg,
     this.xl,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -483,18 +487,21 @@ class ResponsiveBuilder extends StatelessWidget {
 /// a builder for certain tier applies also for larger tiers, so you must set xs at least
 class ResponsiveLayoutBuilder extends StatelessWidget {
   final List<Widget> children;
-  final Widget Function(BuildContext context, List<Widget> children)? sm, md, lg, xl;
+  final Widget Function(BuildContext context, List<Widget> children)? sm,
+      md,
+      lg,
+      xl;
   final Widget Function(BuildContext context, List<Widget> children) xs;
 
   const ResponsiveLayoutBuilder({
-    Key? key,
+    super.key,
     required this.children,
     required this.xs,
     this.sm,
     this.md,
     this.lg,
     this.xl,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -516,7 +523,8 @@ class ResponsiveLayoutBuilder extends StatelessWidget {
 }
 
 /// a value for certain tier applies also for larger tiers unless overridden, so you must set xs at least
-T responsiveValue<T>(BuildContext context, {required T xs, T? sm, T? md, T? lg, T? xl}) {
+T responsiveValue<T>(BuildContext context,
+    {required T xs, T? sm, T? md, T? lg, T? xl}) {
   var w = MediaQuery.of(context).size.width;
   if (w >= ResponsiveGridBreakpoints.value.lg && xl != null) {
     return xl;
@@ -554,7 +562,7 @@ class ResponsiveLocalWidget extends StatelessWidget {
 
   /// a widget that changes according to its own width,
   /// the configs are assumed to be provided in ascending order
-  ResponsiveLocalWidget({Key? key, required this.configs}) : super(key: key) {
+  ResponsiveLocalWidget({super.key, required this.configs}) {
     assert(configs.isNotEmpty);
   }
 
@@ -585,7 +593,8 @@ class ResponsiveLocalBuilder extends StatelessWidget {
 
   /// a widget that changes according to its own width,
   /// the configs are assumed to be provided in ascending order
-  ResponsiveLocalBuilder({Key? key, required this.configs, required this.child}) : super(key: key) {
+  ResponsiveLocalBuilder(
+      {super.key, required this.configs, required this.child}) {
     assert(configs.isNotEmpty);
   }
 
@@ -614,7 +623,8 @@ class ResponsiveLayoutBuilderConfig {
   final double upToWidth;
   final Widget Function(BuildContext context, List<Widget> children) builder;
 
-  ResponsiveLayoutBuilderConfig({required this.upToWidth, required this.builder});
+  ResponsiveLayoutBuilderConfig(
+      {required this.upToWidth, required this.builder});
 }
 
 class ResponsiveLocalLayoutBuilder extends StatelessWidget {
@@ -623,7 +633,8 @@ class ResponsiveLocalLayoutBuilder extends StatelessWidget {
 
   /// a widget that changes according to its own width,
   /// the configs are assumed to be provided in ascending order
-  ResponsiveLocalLayoutBuilder({Key? key, required this.configs, required this.children}) : super(key: key) {
+  ResponsiveLocalLayoutBuilder(
+      {super.key, required this.configs, required this.children}) {
     assert(configs.isNotEmpty);
   }
 
