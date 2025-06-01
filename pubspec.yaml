@@ -1,10 +1,10 @@
 name: responsive_grid
 description: Responsive Grid Layout and List for Flutter
 version: 2.4.4
-homepage: https://github.com/muhammad369/ResponsiveGrid_Flutter
+homepage: https://github.com/iamtoricool/ResponsiveGrid_Flutter
 
 environment:
-  sdk: ">=2.16.0 <3.0.0"
+  sdk: ">=3.0.0 <4.0.0"
   flutter: ">=1.17.0"
 
 dependencies:
@@ -14,6 +14,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^1.0.0
+  flutter_lints: ^6.0.0
 
 flutter:
