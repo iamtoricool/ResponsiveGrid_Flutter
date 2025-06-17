@@ -63,7 +63,7 @@ Widget _buildGridList() {
       ].map((i) {
         return Container(
           height: ((i%5) +1) * 100.0,
-          alignment: Alignment(0, 0),
+          alignment: const Alignment(0, 0),
           color: Colors.cyan,
           child: Text(i.toString()),
         );
@@ -80,9 +80,9 @@ Widget _buildGridLayout() {
             lg: 12,
             child: Container(
               height: 100,
-              alignment: Alignment(0, 0),
+              alignment: const Alignment(0, 0),
               color: Colors.purple,
-              child: Text("lg : 12"),
+              child: const Text("lg : 12"),
             ),
           ),
           ResponsiveGridCol(
@@ -90,9 +90,9 @@ Widget _buildGridLayout() {
             md: 3,
             child: Container(
               height: 100,
-              alignment: Alignment(0, 0),
+              alignment: const Alignment(0, 0),
               color: Colors.green,
-              child: Text("xs : 6 \r\nmd : 3"),
+              child: const Text("xs : 6 \r\nmd : 3"),
             ),
           ),
           ResponsiveGridCol(
@@ -100,9 +100,9 @@ Widget _buildGridLayout() {
             md: 3,
             child: Container(
               height: 100,
-              alignment: Alignment(0, 0),
+              alignment: const Alignment(0, 0),
               color: Colors.orange,
-              child: Text("xs : 6 \r\nmd : 3"),
+              child: const Text("xs : 6 \r\nmd : 3"),
             ),
           ),
           ResponsiveGridCol(
@@ -110,9 +110,9 @@ Widget _buildGridLayout() {
             md: 3,
             child: Container(
               height: 100,
-              alignment: Alignment(0, 0),
+              alignment: const Alignment(0, 0),
               color: Colors.red,
-              child: Text("xs : 6 \r\nmd : 3"),
+              child: const Text("xs : 6 \r\nmd : 3"),
             ),
           ),
           ResponsiveGridCol(
@@ -120,9 +120,9 @@ Widget _buildGridLayout() {
             md: 3,
             child: Container(
               height: 100,
-              alignment: Alignment(0, 0),
+              alignment: const Alignment(0, 0),
               color: Colors.blue,
-              child: Text("xs : 6 \r\nmd : 3"),
+              child: const Text("xs : 6 \r\nmd : 3"),
             ),
           ),
         ],

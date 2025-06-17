@@ -1,4 +1,4 @@
-library responsive_grid;
+library;
 
 import 'package:flutter/widgets.dart';
 
@@ -54,8 +54,8 @@ class ResponsiveGridRow extends StatelessWidget {
     required this.children,
     this.crossAxisAlignment = CrossAxisAlignment.start,
     this.rowSegments = 12,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -65,18 +65,13 @@ class ResponsiveGridRow extends StatelessWidget {
     var cols = <Widget>[];
 
     for (var col in children) {
-      var colWidth = col.currentConfig(context) ?? 1;
+      var colWidth = col.currentConfig(context);
       //
       if (accumulatedWidth + colWidth > rowSegments) {
         if (accumulatedWidth < rowSegments) {
-          cols.add(Spacer(
-            flex: rowSegments - accumulatedWidth,
-          ));
+          cols.add(Spacer(flex: rowSegments - accumulatedWidth));
         }
-        rows.add(Row(
-          crossAxisAlignment: this.crossAxisAlignment,
-          children: cols,
-        ));
+        rows.add(Row(crossAxisAlignment: crossAxisAlignment, children: cols));
         // clear
         cols = <Widget>[];
         accumulatedWidth = 0;
@@ -88,35 +83,28 @@ class ResponsiveGridRow extends StatelessWidget {
 
     if (accumulatedWidth >= 0) {
       if (accumulatedWidth < rowSegments) {
-        cols.add(Spacer(
-          flex: rowSegments - accumulatedWidth,
-        ));
+        cols.add(Spacer(flex: rowSegments - accumulatedWidth));
       }
-      rows.add(Row(
-        crossAxisAlignment: crossAxisAlignment,
-        children: cols,
-      ));
+      rows.add(Row(crossAxisAlignment: crossAxisAlignment, children: cols));
     }
 
-    return Column(
-      children: rows,
-    );
+    return Column(children: rows);
   }
 }
 
 class ResponsiveGridCol extends StatelessWidget {
-  final _config = [0,0,0,0,0];
+  final _config = [0, 0, 0, 0, 0];
   final Widget child;
 
   ResponsiveGridCol({
+    super.key,
     int xs = 12,
     int? sm,
     int? md,
     int? lg,
     int? xl,
     required this.child,
-    Key? key,
-  }) : super(key: key) {
+  }) {
     _config[_GridTier.xs.index] = xs;
     _config[_GridTier.sm.index] = sm ?? _config[_GridTier.xs.index];
     _config[_GridTier.md.index] = md ?? _config[_GridTier.sm.index];
@@ -133,10 +121,7 @@ class ResponsiveGridCol extends StatelessWidget {
     final configFlex = currentConfig(context);
     return configFlex == 0
         ? Container()
-        : Expanded(
-            flex: configFlex,
-            child: child,
-          );
+        : Expanded(flex: configFlex, child: child);
   }
 }
 
@@ -154,6 +139,7 @@ class ResponsiveGridList extends StatelessWidget {
   final ScrollPhysics? physics;
 
   const ResponsiveGridList({
+    super.key,
     required this.desiredItemWidth,
     this.minSpacing = 1,
     this.squareCells = false,
@@ -163,8 +149,7 @@ class ResponsiveGridList extends StatelessWidget {
     this.shrinkWrap = false,
     this.controller,
     this.physics,
-    Key? key,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -190,47 +175,47 @@ class ResponsiveGridList extends StatelessWidget {
             n = 1;
           }
 
-          double dw = width - (n * (desiredItemWidth + minSpacing) + minSpacing);
+          double dw =
+              width - (n * (desiredItemWidth + minSpacing) + minSpacing);
 
-          itemWidth = desiredItemWidth + (dw / n) * (desiredItemWidth / (desiredItemWidth + minSpacing));
+          itemWidth =
+              desiredItemWidth +
+              (dw / n) * (desiredItemWidth / (desiredItemWidth + minSpacing));
 
           spacing = (width - itemWidth * n) / (n + 1);
         }
 
         if (scroll) {
           return ListView.builder(
-              controller: controller,
-              physics: physics,
-              shrinkWrap: shrinkWrap,
-              itemCount: (children.length / n).ceil() * 2 - 1,
-              itemBuilder: (context, index) {
-                //if (index * n >= children.length) return null;
-                //separator
-                if (index % 2 == 1) {
-                  return SizedBox(
-                    height: minSpacing,
-                  );
-                }
-                //item
-                final rowChildren = <Widget>[];
-                index = index ~/ 2;
-                for (int i = index * n; i < (index + 1) * n; i++) {
-                  if (i >= children.length) break;
-                  rowChildren.add(children[i]);
-                }
-                return _ResponsiveGridListRow(
-                  mainAxisAlignment: rowMainAxisAlignment,
-                  itemWidth: itemWidth,
-                  spacing: spacing,
-                  squareCells: squareCells,
-                  children: rowChildren,
-                );
-              });
+            controller: controller,
+            physics: physics,
+            shrinkWrap: shrinkWrap,
+            itemCount: (children.length / n).ceil() * 2 - 1,
+            itemBuilder: (context, index) {
+              //if (index * n >= children.length) return null;
+              //separator
+              if (index % 2 == 1) {
+                return SizedBox(height: minSpacing);
+              }
+              //item
+              final rowChildren = <Widget>[];
+              index = index ~/ 2;
+              for (int i = index * n; i < (index + 1) * n; i++) {
+                if (i >= children.length) break;
+                rowChildren.add(children[i]);
+              }
+              return _ResponsiveGridListRow(
+                mainAxisAlignment: rowMainAxisAlignment,
+                itemWidth: itemWidth,
+                spacing: spacing,
+                squareCells: squareCells,
+                children: rowChildren,
+              );
+            },
+          );
         } else {
           final rows = <Widget>[];
-          rows.add(SizedBox(
-            height: minSpacing,
-          ));
+          rows.add(SizedBox(height: minSpacing));
           //
           for (int j = 0; j < (children.length / n).ceil(); j++) {
             final rowChildren = <Widget>[];
@@ -240,22 +225,20 @@ class ResponsiveGridList extends StatelessWidget {
               rowChildren.add(children[i]);
             }
             //
-            rows.add(_ResponsiveGridListRow(
-              mainAxisAlignment: rowMainAxisAlignment,
-              itemWidth: itemWidth,
-              spacing: spacing,
-              squareCells: squareCells,
-              children: rowChildren,
-            ));
+            rows.add(
+              _ResponsiveGridListRow(
+                mainAxisAlignment: rowMainAxisAlignment,
+                itemWidth: itemWidth,
+                spacing: spacing,
+                squareCells: squareCells,
+                children: rowChildren,
+              ),
+            );
 
-            rows.add(SizedBox(
-              height: minSpacing,
-            ));
+            rows.add(SizedBox(height: minSpacing));
           }
 
-          return Column(
-            children: rows,
-          );
+          return Column(children: rows);
         }
       },
     );
@@ -269,13 +252,14 @@ class _ResponsiveGridListRow extends StatelessWidget {
   final MainAxisAlignment mainAxisAlignment;
 
   const _ResponsiveGridListRow({
+    // ignore: unused_element_parameter
+    super.key,
     required this.itemWidth,
     required this.spacing,
     required this.squareCells,
     required this.children,
     this.mainAxisAlignment = MainAxisAlignment.start,
-    Key? key,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -289,19 +273,17 @@ class _ResponsiveGridListRow extends StatelessWidget {
   List<Widget> _buildChildren() {
     final list = <Widget>[];
 
-    list.add(SizedBox(
-      width: spacing,
-    ));
+    list.add(SizedBox(width: spacing));
 
     for (var child in children) {
-      list.add(SizedBox(
-        width: itemWidth,
-        height: squareCells ? itemWidth : null,
-        child: child,
-      ));
-      list.add(SizedBox(
-        width: spacing,
-      ));
+      list.add(
+        SizedBox(
+          width: itemWidth,
+          height: squareCells ? itemWidth : null,
+          child: child,
+        ),
+      );
+      list.add(SizedBox(width: spacing));
     }
 
     return list;
@@ -321,6 +303,7 @@ class ResponsiveStaggeredGridList extends StatelessWidget {
   final bool scroll;
 
   const ResponsiveStaggeredGridList({
+    super.key,
     required this.desiredItemWidth,
     this.minSpacing = 1,
     required this.children,
@@ -328,8 +311,7 @@ class ResponsiveStaggeredGridList extends StatelessWidget {
     this.controller,
     this.physics,
     this.scroll = true,
-    Key? key,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -355,47 +337,40 @@ class ResponsiveStaggeredGridList extends StatelessWidget {
             n = 1;
           }
 
-          double dw = width - (n * (desiredItemWidth + minSpacing) + minSpacing);
+          double dw =
+              width - (n * (desiredItemWidth + minSpacing) + minSpacing);
 
-          itemWidth = desiredItemWidth + (dw / n) * (desiredItemWidth / (desiredItemWidth + minSpacing));
+          itemWidth =
+              desiredItemWidth +
+              (dw / n) * (desiredItemWidth / (desiredItemWidth + minSpacing));
 
           spacing = (width - itemWidth * n) / (n + 1);
         }
 
         final List<List<Widget>> colsChildren = [];
-        colsChildren.addAll(List.generate(
-            n,
-            (index) => <Widget>[
-                  SizedBox(
-                    height: spacing,
-                  )
-                ]));
+        colsChildren.addAll(
+          List.generate(n, (index) => <Widget>[SizedBox(height: spacing)]),
+        );
 
         //
         for (int j = 0; j < children.length; j++) {
           final index = j % n;
           colsChildren[index].add(children[j]);
-          colsChildren[index].add(SizedBox(
-            height: spacing,
-          ));
+          colsChildren[index].add(SizedBox(height: spacing));
         }
 
         final cols = <Widget>[];
 
-        cols.add(SizedBox(
-          width: spacing,
-        ));
+        cols.add(SizedBox(width: spacing));
         //
         for (int i = 0; i < colsChildren.length; i++) {
-          cols.add(SizedBox(
-            width: itemWidth,
-            child: Column(
-              children: colsChildren[i],
+          cols.add(
+            SizedBox(
+              width: itemWidth,
+              child: Column(children: colsChildren[i]),
             ),
-          ));
-          cols.add(SizedBox(
-            width: spacing,
-          ));
+          );
+          cols.add(SizedBox(width: spacing));
         }
 
         return scroll
@@ -406,10 +381,7 @@ class ResponsiveStaggeredGridList extends StatelessWidget {
                   children: cols,
                 ),
               )
-            : Row(
-                crossAxisAlignment: crossAxisAlignment,
-                children: cols,
-              );
+            : Row(crossAxisAlignment: crossAxisAlignment, children: cols);
       },
     );
   }
@@ -424,7 +396,14 @@ class ResponsiveWidget extends StatelessWidget {
   final Widget? sm, md, lg, xl;
   final Widget xs;
 
-  const ResponsiveWidget({Key? key, this.lg, this.md, this.sm, this.xl, required this.xs}) : super(key: key);
+  const ResponsiveWidget({
+    super.key,
+    this.lg,
+    this.md,
+    this.sm,
+    this.xl,
+    required this.xs,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -452,14 +431,14 @@ class ResponsiveBuilder extends StatelessWidget {
   final Function(BuildContext context, Widget child) xs;
 
   const ResponsiveBuilder({
-    Key? key,
+    super.key,
     required this.child,
     required this.xs,
     this.sm,
     this.md,
     this.lg,
     this.xl,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -483,18 +462,21 @@ class ResponsiveBuilder extends StatelessWidget {
 /// a builder for certain tier applies also for larger tiers, so you must set xs at least
 class ResponsiveLayoutBuilder extends StatelessWidget {
   final List<Widget> children;
-  final Widget Function(BuildContext context, List<Widget> children)? sm, md, lg, xl;
+  final Widget Function(BuildContext context, List<Widget> children)? sm,
+      md,
+      lg,
+      xl;
   final Widget Function(BuildContext context, List<Widget> children) xs;
 
   const ResponsiveLayoutBuilder({
-    Key? key,
+    super.key,
     required this.children,
     required this.xs,
     this.sm,
     this.md,
     this.lg,
     this.xl,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -516,7 +498,14 @@ class ResponsiveLayoutBuilder extends StatelessWidget {
 }
 
 /// a value for certain tier applies also for larger tiers unless overridden, so you must set xs at least
-T responsiveValue<T>(BuildContext context, {required T xs, T? sm, T? md, T? lg, T? xl}) {
+T responsiveValue<T>(
+  BuildContext context, {
+  required T xs,
+  T? sm,
+  T? md,
+  T? lg,
+  T? xl,
+}) {
   var w = MediaQuery.of(context).size.width;
   if (w >= ResponsiveGridBreakpoints.value.lg && xl != null) {
     return xl;
@@ -554,28 +543,30 @@ class ResponsiveLocalWidget extends StatelessWidget {
 
   /// a widget that changes according to its own width,
   /// the configs are assumed to be provided in ascending order
-  ResponsiveLocalWidget({Key? key, required this.configs}) : super(key: key) {
+  ResponsiveLocalWidget({super.key, required this.configs}) {
     assert(configs.isNotEmpty);
   }
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      if (constraints.hasInfiniteWidth) {
-        print(
-          "ResponsiveGrid: Warning, You're using the ResponsiveLocalWidget inside an unbounded width parent, "
-          "Your configuration is useless",
-        );
-      }
-
-      for (var config in configs) {
-        if (constraints.maxWidth <= config.upToWidth) {
-          return config.child;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.hasInfiniteWidth) {
+          print(
+            "ResponsiveGrid: Warning, You're using the ResponsiveLocalWidget inside an unbounded width parent, "
+            "Your configuration is useless",
+          );
         }
-      }
-      //
-      return configs.last.child;
-    });
+
+        for (var config in configs) {
+          if (constraints.maxWidth <= config.upToWidth) {
+            return config.child;
+          }
+        }
+        //
+        return configs.last.child;
+      },
+    );
   }
 }
 
@@ -585,28 +576,34 @@ class ResponsiveLocalBuilder extends StatelessWidget {
 
   /// a widget that changes according to its own width,
   /// the configs are assumed to be provided in ascending order
-  ResponsiveLocalBuilder({Key? key, required this.configs, required this.child}) : super(key: key) {
+  ResponsiveLocalBuilder({
+    super.key,
+    required this.configs,
+    required this.child,
+  }) {
     assert(configs.isNotEmpty);
   }
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      if (constraints.hasInfiniteWidth) {
-        print(
-          "ResponsiveGrid: Warning, You're using the ResponsiveLocalBuilder inside an unbounded width parent, "
-          "Your configuration is useless",
-        );
-      }
-
-      for (var config in configs) {
-        if (constraints.maxWidth <= config.upToWidth) {
-          return config.builder(context, child);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.hasInfiniteWidth) {
+          print(
+            "ResponsiveGrid: Warning, You're using the ResponsiveLocalBuilder inside an unbounded width parent, "
+            "Your configuration is useless",
+          );
         }
-      }
-      //
-      return configs.last.builder(context, child);
-    });
+
+        for (var config in configs) {
+          if (constraints.maxWidth <= config.upToWidth) {
+            return config.builder(context, child);
+          }
+        }
+        //
+        return configs.last.builder(context, child);
+      },
+    );
   }
 }
 
@@ -614,7 +611,10 @@ class ResponsiveLayoutBuilderConfig {
   final double upToWidth;
   final Widget Function(BuildContext context, List<Widget> children) builder;
 
-  ResponsiveLayoutBuilderConfig({required this.upToWidth, required this.builder});
+  ResponsiveLayoutBuilderConfig({
+    required this.upToWidth,
+    required this.builder,
+  });
 }
 
 class ResponsiveLocalLayoutBuilder extends StatelessWidget {
@@ -623,27 +623,33 @@ class ResponsiveLocalLayoutBuilder extends StatelessWidget {
 
   /// a widget that changes according to its own width,
   /// the configs are assumed to be provided in ascending order
-  ResponsiveLocalLayoutBuilder({Key? key, required this.configs, required this.children}) : super(key: key) {
+  ResponsiveLocalLayoutBuilder({
+    super.key,
+    required this.configs,
+    required this.children,
+  }) {
     assert(configs.isNotEmpty);
   }
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      if (constraints.hasInfiniteWidth) {
-        print(
-          "ResponsiveGrid: Warning, You're using the ResponsiveLocalLayoutBuilder inside an unbounded width parent, "
-          "Your configuration is useless",
-        );
-      }
-
-      for (var config in configs) {
-        if (constraints.maxWidth <= config.upToWidth) {
-          return config.builder(context, children);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.hasInfiniteWidth) {
+          print(
+            "ResponsiveGrid: Warning, You're using the ResponsiveLocalLayoutBuilder inside an unbounded width parent, "
+            "Your configuration is useless",
+          );
         }
-      }
-      //
-      return configs.last.builder(context, children);
-    });
+
+        for (var config in configs) {
+          if (constraints.maxWidth <= config.upToWidth) {
+            return config.builder(context, children);
+          }
+        }
+        //
+        return configs.last.builder(context, children);
+      },
+    );
   }
 }
