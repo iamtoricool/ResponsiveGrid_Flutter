@@ -49,12 +49,14 @@ class ResponsiveGridRow extends StatelessWidget {
   final List<ResponsiveGridCol> children;
   final CrossAxisAlignment crossAxisAlignment;
   final int rowSegments;
+  final double verticalSpacing;
 
   const ResponsiveGridRow({
+    super.key,
     required this.children,
     this.crossAxisAlignment = CrossAxisAlignment.start,
     this.rowSegments = 12,
-    super.key,
+    this.verticalSpacing = 0,
   });
 
   @override
@@ -88,7 +90,7 @@ class ResponsiveGridRow extends StatelessWidget {
       rows.add(Row(crossAxisAlignment: crossAxisAlignment, children: cols));
     }
 
-    return Column(children: rows);
+    return Column(spacing: verticalSpacing, children: rows);
   }
 }
 
@@ -120,7 +122,7 @@ class ResponsiveGridCol extends StatelessWidget {
   Widget build(BuildContext context) {
     final configFlex = currentConfig(context);
     return configFlex == 0
-        ? Container()
+        ? const SizedBox.shrink()
         : Expanded(flex: configFlex, child: child);
   }
 }
@@ -155,7 +157,7 @@ class ResponsiveGridList extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (children.isEmpty) return Container();
+        if (children.isEmpty) return const SizedBox.shrink();
 
         double width = constraints.maxWidth;
 
@@ -317,7 +319,7 @@ class ResponsiveStaggeredGridList extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (children.isEmpty) return Container();
+        if (children.isEmpty) return const SizedBox.shrink();
 
         double width = constraints.maxWidth;
 
